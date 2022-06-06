@@ -40,7 +40,7 @@ public class SwaggerConfig {
 					.email("gabriel.d.c.s.master@gmail.com")))
 				.externalDocs(new ExternalDocumentation()
 					.description("Repositório Github")
-					.url("https://github.com/Gabacles/BlogPessoalGabriel"));
+					.url("https://github.com/GDuart4002/BlogPessoal"));
 	}
 
     /**
