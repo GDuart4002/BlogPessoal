@@ -21,7 +21,7 @@ import com.generation.blogpessoal.model.Postagem;
 import com.generation.blogpessoal.repository.PostagemRepository;
 
 @RestController
-@RequestMapping("/postagens")
+@RequestMapping("/postagem")
 @CrossOrigin(origins="*")
 public class PostagemController {
 		
@@ -45,18 +45,23 @@ public class PostagemController {
 			return ResponseEntity.ok(repository.findAllByTituloContainingIgnoreCase(titulo));
 		}
 		
-		@PostMapping("/cadastrar")
+		@PostMapping
 		public ResponseEntity<Postagem> post(@Valid @RequestBody Postagem postagem) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(postagem));
 		}
 		
-		@PutMapping("/atualizar")
+		@PutMapping
 		public ResponseEntity<Postagem> put(@RequestBody Postagem postagem) {
 			return ResponseEntity.status(HttpStatus.OK).body(repository.save(postagem));
 		}
 		
 		@DeleteMapping("/{id}")
-		public void delete(@PathVariable Long id) {
-			repository.deleteById(id);
+		public ResponseEntity<?> delete(@PathVariable Long id) {
+			return repository.findById(id)
+					.map(resposta -> {
+						repository.deleteById(id);
+						return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+					})
+					.orElse(ResponseEntity.notFound().build());
 		}
 }

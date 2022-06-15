@@ -68,13 +68,20 @@ public class UsuarioController {
 	}
 	
 	@PutMapping("/atualizar")
-	public ResponseEntity<Usuario> put(@Valid @RequestBody Usuario usuario) {
-		usuario.setSenha(usuarioService.criptografarSenha(usuario.getSenha()));
-		return ResponseEntity.status(HttpStatus.OK).body(usuarioRepository.save(usuario));
+	public ResponseEntity<Usuario> putUsuarioAtualizar(@RequestBody Usuario usuario) {
+
+		return usuarioService.atualizarUsuario(usuario)
+				.map(resposta -> ResponseEntity.status(HttpStatus.CREATED).body(resposta))
+				.orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
 	}
 	
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable Long id) {
-		usuarioRepository.deleteById(id);
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		return usuarioRepository.findById(id)
+				.map(resposta -> {
+				usuarioRepository.deleteById(id);
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+				})
+				.orElse(ResponseEntity.notFound().build());
 	}
 }

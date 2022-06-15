@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -18,91 +19,97 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
-@Table(name = "tb_usuario")
+@Table (name = "tb_usuario")
 public class Usuario {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
-	@NotNull
-	private String nome;
 	
-	@Schema(example = "email@email.com.br")
-	@NotNull(message = "Campo usuário é obrigatório!")
-	@Email(message = "Digite um e-mail válido!")
-	@Size(min = 10, max = 100, message = "O campo deve ter no mínimo 10 caracteres, e no máximo 100 caracteres")
-	private String usuario;
+		@Id
+		@GeneratedValue (strategy = GenerationType.IDENTITY)
+		private Long id;
+		
+		@NotBlank
+		private String nome;
+		
+		@Schema(example = "email@email.com.br")
+		@NotNull (message = "Campo obrigatório")
+		@Email (message = "Usuário deve ser um e-mail válido! \n Exemplo: charliebrown@jigjey.com")
+		private String usuario;
+		
+		@NotBlank
+		@Size(min = 4, max = 100, message = "No mínimo 4 caracteres, por favor.")
+		private String senha;
+		
+		private String foto;
+		
+		private String tipo;
+		
+		@OneToMany (mappedBy = "usuario", cascade = CascadeType.ALL)
+		@JsonIgnoreProperties ("usuario")
+		private List <Postagem> postagem;
+		
+		public Usuario(Long id, String nome, String usuario, String senha, String foto, String tipo) {
+			this.id = id;
+			this.nome = nome;
+			this.usuario = usuario;
+			this.senha = senha;
+			this.foto = foto;
+			this.tipo = tipo;
+		}
 
-	@NotNull
-	private String senha;
+		public Usuario() {}
 
-	private String foto;
+		public Long getId() {
+			return id;
+		}
 
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-	@JsonIgnoreProperties("usuario")
-	private List<Postagem> postagem;
+		public void setId(Long id) {
+			this.id = id;
+		}
 
-	// Metodos construtores para testes
-	//importante seguir a mesma ordem das declarações dos atributos de usuario acima 
-	//construtor cheio
-	public Usuario(Long id, String nome, String usuario, String senha, String foto) {
-		this.id = id;
-		this.nome = nome;
-		this.usuario = usuario;
-		this.senha = senha;
-		this.foto = foto;
-	}
+		public String getNome() {
+			return nome;
+		}
 
-	// construtor vazio
-	public Usuario() {
-	}
+		public void setNome(String nome) {
+			this.nome = nome;
+		}
 
-	public Long getId() {
-		return id;
-	}
+		public String getUsuario() {
+			return usuario;
+		}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+		public void setUsuario(String usuario) {
+			this.usuario = usuario;
+		}
 
-	public String getNome() {
-		return nome;
-	}
+		public String getSenha() {
+			return senha;
+		}
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+		public void setSenha(String senha) {
+			this.senha = senha;
+		}
 
-	public String getUsuario() {
-		return usuario;
-	}
+		public String getFoto() {
+			return foto;
+		}
 
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
+		public void setFoto(String foto) {
+			this.foto = foto;
+		}
 
-	public String getFoto() {
-		return foto;
-	}
+		public String getTipo() {
+			return tipo;
+		}
 
-	public void setFoto(String foto) {
-		this.foto = foto;
-	}
+		public void setTipo(String tipo) {
+			this.tipo = tipo;
+		}
 
-	public String getSenha() {
-		return senha;
-	}
+		public List<Postagem> getPostagem() {
+			return postagem;
+		}
 
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-
-	public List<Postagem> getPostagem() {
-		return postagem;
-	}
-
-	public void setPostagem(List<Postagem> postagem) {
-		this.postagem = postagem;
-	}
+		public void setPostagem(List<Postagem> postagem) {
+			this.postagem = postagem;
+		}
 }

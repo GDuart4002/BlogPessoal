@@ -28,6 +28,16 @@ public class UsuarioService {
 
 	}
 
+	public Optional <Usuario> atualizarUsuario(Usuario usuario) {
+
+		if (repository.findById(usuario.getId()).isPresent()) {
+			usuario.setSenha(criptografarSenha(usuario.getSenha()));
+			return Optional.of(repository.save(usuario));
+		}
+			
+		return Optional.empty();
+	}
+	
 	public String criptografarSenha(String senha) {
 
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
